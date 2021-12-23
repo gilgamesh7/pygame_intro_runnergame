@@ -24,6 +24,19 @@ def main()-> None:
         pygame.display.set_caption('Runner')
         # create clock for controlling fps
         clock = pygame.time.Clock()
+
+        # Test surface with width, height
+        # test_surface = pygame.Surface((100,200))
+        # test_surface.fill('Red')
+
+        # create sky regular surface
+        sky_surface = pygame.image.load('graphics/sky.png')
+        # create ground regular surface
+        ground_surface = pygame.image.load('graphics/ground.png')
+        # Create on screen caption - None defaults to pygame font
+        caption_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
+        # Text, Anti Aliaisingt to smooth out edges, 
+        caption_surface = caption_font.render('Runner', False, 'Purple')
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -37,8 +50,16 @@ def main()-> None:
                     # Ensure pygame ends 
                     exit()
 
-            # Writeupdates to g=display surface
+            # blit - Blcok Image Transfer i.e put a regular surface on top of display surface
+            screen.blit(sky_surface,(0,0))
+            screen.blit(ground_surface,(0,300))
+            screen.blit(caption_surface,(350,10))
+
+            # Writeupdates to display surface
             pygame.display.update()
+
+            # Control speed , set maximum frame rate - while loop must not run more than 60 times per second
+            clock.tick(60)
 
     except Exception as error:
         logger.error(f"[red]{error}[/red]", extra={"markup": True})
