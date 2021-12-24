@@ -30,13 +30,17 @@ def main()-> None:
         # test_surface.fill('Red')
 
         # create sky regular surface
-        sky_surface = pygame.image.load('graphics/sky.png')
+        sky_surface = pygame.image.load('graphics/sky.png').convert()
         # create ground regular surface
-        ground_surface = pygame.image.load('graphics/ground.png')
+        ground_surface = pygame.image.load('graphics/ground.png').convert()
         # Create on screen caption - None defaults to pygame font
         caption_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
         # Text, Anti Aliaisingt to smooth out edges, 
         caption_surface = caption_font.render('Runner', False, 'Purple')
+        # Snail
+        snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
+        snail_x_pos = 650
+        animation_speed = 4
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -54,6 +58,9 @@ def main()-> None:
             screen.blit(sky_surface,(0,0))
             screen.blit(ground_surface,(0,300))
             screen.blit(caption_surface,(350,10))
+
+            screen.blit(snail_surface,(snail_x_pos,270))
+            snail_x_pos = snail_x_pos - animation_speed if snail_x_pos > 0 else 800
 
             # Writeupdates to display surface
             pygame.display.update()
