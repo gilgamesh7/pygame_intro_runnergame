@@ -55,6 +55,17 @@ def main()-> None:
                     # Ensure pygame ends 
                     exit()
 
+                if event.type == pygame.MOUSEMOTION:
+                    if player_rectangle.collidepoint(event.pos) :
+                        print('Mouse collided with player')
+                    
+
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    print("Mouse Down")
+
+                if event.type == pygame.MOUSEBUTTONUP:
+                    print("Mouse Up")
+
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             screen.blit(sky_surface,(0,0))
             screen.blit(ground_surface,(0,300))
@@ -63,6 +74,11 @@ def main()-> None:
             screen.blit(snail_surface,snail_rectangle)
             snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
             screen.blit(player_surface,player_rectangle)
+            # player_rectangle.x = player_rectangle.x + player_speed if player_rectangle.right < 800 else 80
+
+            # if player_rectangle.colliderect(snail_rectangle) # check collision using rectangles only
+            if player_rectangle.collidepoint(pygame.mouse.get_pos()) :
+                print(pygame.mouse.get_pressed())
 
             # Writeupdates to display surface
             pygame.display.update()
