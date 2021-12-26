@@ -65,6 +65,10 @@ def main()-> None:
             screen.blit(player_surface,player_rectangle)
             player_rectangle.x = player_rectangle.x + player_speed if player_rectangle.right < 800 else 80
 
+            # if player_rectangle.colliderect(snail_rectangle) # check collision using rectangles only
+            if player_rectangle.collidepoint(pygame.mouse.get_pos()) :
+                print("Collision")
+
             # Writeupdates to display surface
             pygame.display.update()
 
