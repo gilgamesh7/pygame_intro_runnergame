@@ -25,6 +25,10 @@ def main()-> None:
         # create clock for controlling fps
         clock = pygame.time.Clock()
 
+        # Test surface with width, height
+        # test_surface = pygame.Surface((100,200))
+        # test_surface.fill('Red')
+
         # create sky regular surface
         sky_surface = pygame.image.load('graphics/sky.png').convert()
         # create ground regular surface
@@ -33,15 +37,14 @@ def main()-> None:
         caption_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
         # Text, Anti Aliaisingt to smooth out edges, 
         caption_surface = caption_font.render('Runner', False, 'Purple')
-
         # Snail
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-        snail_rectangle = snail_surface.get_rect(topleft=(700, 265))
-        snail_speed = 4
+        snail_x_pos = 650
+        animation_speed = 4
         # Player
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
-        player_rectangle = player_surface.get_rect(midbottom=(80,300))
-        player_speed = 1
+        # player_rectangle = pygame.Rect(left,top, width, height)  
+
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -55,15 +58,15 @@ def main()-> None:
                     # Ensure pygame ends 
                     exit()
 
-            # blit - Block Image Transfer i.e put a regular surface on top of display surface
+            # blit - Blcok Image Transfer i.e put a regular surface on top of display surface
             screen.blit(sky_surface,(0,0))
             screen.blit(ground_surface,(0,300))
             screen.blit(caption_surface,(350,10))
 
-            screen.blit(snail_surface,snail_rectangle)
-            snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
-            screen.blit(player_surface,player_rectangle)
-            player_rectangle.x = player_rectangle.x + player_speed if player_rectangle.right < 800 else 80
+            screen.blit(snail_surface,(snail_x_pos,250))
+            snail_x_pos = snail_x_pos - animation_speed if snail_x_pos > 0 else 800
+
+            screen.blit(player_surface,(80,200))
 
             # Writeupdates to display surface
             pygame.display.update()
