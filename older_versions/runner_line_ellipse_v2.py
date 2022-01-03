@@ -70,6 +70,12 @@ def main()-> None:
             snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
             screen.blit(player_surface,player_rectangle)
 
+            # draw line from top left to bottom right
+            # line(surface, color, start_pos, end_pos) -> Rect
+            # pygame.draw.line(screen, 'Red',(0,0),(800,400))
+            pygame.draw.line(screen, 'Red',(0,0),pygame.mouse.get_pos())
+            pygame.draw.ellipse(screen,'Gold',pygame.Rect(500,200,100,200))
+
             # Writeupdates to display surface
             pygame.display.update()
 
