@@ -29,10 +29,12 @@ def main()-> None:
         sky_surface = pygame.image.load('graphics/sky.png').convert()
         # create ground regular surface
         ground_surface = pygame.image.load('graphics/ground.png').convert()
+
         # Create on screen caption - None defaults to pygame font
-        caption_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
+        score_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
         # Text, Anti Aliaisingt to smooth out edges, 
-        caption_surface = caption_font.render('Runner', False, 'Purple')
+        score_surface = score_font.render('Runner', False, 'Purple')
+        score_rectangle = score_surface.get_rect(center=(400,50))
 
         # Snail
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
@@ -58,7 +60,9 @@ def main()-> None:
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             screen.blit(sky_surface,(0,0))
             screen.blit(ground_surface,(0,300))
-            screen.blit(caption_surface,(350,10))
+
+            # Score board
+            screen.blit(score_surface,score_rectangle)
 
             screen.blit(snail_surface,snail_rectangle)
             snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
