@@ -33,17 +33,17 @@ def main()-> None:
         # Create on screen caption - None defaults to pygame font
         score_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
         # Text, Anti Aliaisingt to smooth out edges, 
-        score_surface = score_font.render('Runner', False, 'Purple')
+        score_surface = score_font.render('Runner', False, (64,64,64))
         score_rectangle = score_surface.get_rect(center=(400,50))
 
         # Snail
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
         snail_rectangle = snail_surface.get_rect(topleft=(700, 265))
         snail_speed = 4
+
         # Player
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_rectangle = player_surface.get_rect(midbottom=(80,300))
-        player_speed = 1
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -62,8 +62,8 @@ def main()-> None:
             screen.blit(ground_surface,(0,300))
 
             # Score board
-            pygame.draw.rect(screen,'Pink',score_rectangle,6)
-            pygame.draw.rect(screen,'Pink',score_rectangle)
+            pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
+            pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
             screen.blit(score_surface,score_rectangle)
 
             screen.blit(snail_surface,snail_rectangle)
