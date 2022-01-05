@@ -44,6 +44,7 @@ def main()-> None:
         # Player
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_rectangle = player_surface.get_rect(midbottom=(80,300))
+        player_gravity = 0
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -57,13 +58,13 @@ def main()-> None:
                     # Ensure pygame ends 
                     exit()
 
+                if event.type == pygame.MOUSEBUTTONDOWN :
+                    if player_rectangle.collidepoint(event.pos):
+                        player_gravity = -20
+                
                 if event.type == pygame.KEYDOWN:
-                    print('key down')
                     if event.key == pygame.K_SPACE:
-                        print('space pressed')
-
-                if event.type == pygame.KEYUP :
-                    print('key up')
+                        player_gravity = -20
 
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             screen.blit(sky_surface,(0,0))
@@ -74,12 +75,16 @@ def main()-> None:
             pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
             screen.blit(score_surface,score_rectangle)
 
+            # snail
             screen.blit(snail_surface,snail_rectangle)
             snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
-            screen.blit(player_surface,player_rectangle)
 
-            if pygame.key.get_pressed()[pygame.K_SPACE] :
-                print('Jump')
+            # player
+            player_gravity += 1
+            player_rectangle.y += player_gravity
+            if player_rectangle.bottom > 300 :
+                player_rectangle.bottom = 300
+            screen.blit(player_surface,player_rectangle)
 
             # Writeupdates to display surface
             pygame.display.update()
