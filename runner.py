@@ -25,6 +25,9 @@ def main()-> None:
         # create clock for controlling fps
         clock = pygame.time.Clock()
 
+        # game active flag
+        game_active = True
+
         # create sky regular surface
         sky_surface = pygame.image.load('graphics/sky.png').convert()
         # create ground regular surface
@@ -58,35 +61,49 @@ def main()-> None:
                     # Ensure pygame ends 
                     exit()
 
-                if event.type == pygame.MOUSEBUTTONDOWN :
-                    if player_rectangle.collidepoint(event.pos):
-                        if player_rectangle.bottom == 300:
-                            player_gravity = -20
-                
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:
-                        if player_rectangle.bottom == 300:
-                            player_gravity = -20
+                if game_active :
+                    if event.type == pygame.MOUSEBUTTONDOWN :
+                        if player_rectangle.collidepoint(event.pos):
+                            if player_rectangle.bottom == 300:
+                                player_gravity = -20
+                    
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            if player_rectangle.bottom == 300:
+                                player_gravity = -20
+                else:
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_SPACE:
+                            game_active = True
+                            snail_rectangle.left = 800
+                    
+            if game_active :
+                # blit - Block Image Transfer i.e put a regular surface on top of display surface
+                screen.blit(sky_surface,(0,0))
+                screen.blit(ground_surface,(0,300))
 
-            # blit - Block Image Transfer i.e put a regular surface on top of display surface
-            screen.blit(sky_surface,(0,0))
-            screen.blit(ground_surface,(0,300))
+                # Score board
+                pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
+                pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
+                screen.blit(score_surface,score_rectangle)
 
-            # Score board
-            pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
-            pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
-            screen.blit(score_surface,score_rectangle)
+                # snail
+                screen.blit(snail_surface,snail_rectangle)
+                snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
 
-            # snail
-            screen.blit(snail_surface,snail_rectangle)
-            snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
+                # player
+                player_gravity += 1
+                player_rectangle.y += player_gravity
+                if player_rectangle.bottom > 300 :
+                    player_rectangle.bottom = 300
+                screen.blit(player_surface,player_rectangle)
 
-            # player
-            player_gravity += 1
-            player_rectangle.y += player_gravity
-            if player_rectangle.bottom > 300 :
-                player_rectangle.bottom = 300
-            screen.blit(player_surface,player_rectangle)
+                # collison
+                if snail_rectangle.colliderect(player_rectangle) :
+                    logger.info(f"[red]COLLISION - EndingGame[/red]", extra={"markup": True})
+                    game_active = False
+            else:
+                screen.fill('Purple')
 
             # Writeupdates to display surface
             pygame.display.update()
