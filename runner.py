@@ -60,11 +60,13 @@ def main()-> None:
 
                 if event.type == pygame.MOUSEBUTTONDOWN :
                     if player_rectangle.collidepoint(event.pos):
-                        player_gravity = -20
+                        if player_rectangle.bottom == 300:
+                            player_gravity = -20
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
-                        player_gravity = -20
+                        if player_rectangle.bottom == 300:
+                            player_gravity = -20
 
             # blit - Block Image Transfer i.e put a regular surface on top of display surface
             screen.blit(sky_surface,(0,0))
