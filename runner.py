@@ -9,6 +9,21 @@ from sys import exit
 logging.basicConfig(level=logging.INFO, format="[{asctime}] - {funcName} - {message}", style='{', handlers=[RichHandler()])
 logger = logging.getLogger("Runner")
 
+def display_score(screen: pygame.display, start_time: int)->None:
+    current_time = int(pygame.time.get_ticks()/1000) - start_time
+
+    # Create on screen caption - None defaults to pygame font
+    score_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
+    # Text, Anti Aliaising to smooth out edges, 
+    score_surface = score_font.render(f'Score : {current_time}', False, (64,64,64))
+    score_rectangle = score_surface.get_rect(center=(400,50))
+
+    # Score board
+    pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
+    pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
+    screen.blit(score_surface,score_rectangle)
+
+
 def main()-> None:
     try:
         # raise Exception("Testing exception logger")
@@ -28,16 +43,13 @@ def main()-> None:
         # game active flag
         game_active = True
 
+        # start time for score
+        start_time = 0
+
         # create sky regular surface
         sky_surface = pygame.image.load('graphics/sky.png').convert()
         # create ground regular surface
         ground_surface = pygame.image.load('graphics/ground.png').convert()
-
-        # Create on screen caption - None defaults to pygame font
-        score_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
-        # Text, Anti Aliaisingt to smooth out edges, 
-        score_surface = score_font.render('Runner', False, (64,64,64))
-        score_rectangle = score_surface.get_rect(center=(400,50))
 
         # Snail
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
@@ -76,16 +88,12 @@ def main()-> None:
                         if event.key == pygame.K_SPACE:
                             game_active = True
                             snail_rectangle.left = 800
+                            start_time = int(pygame.time.get_ticks()/1000)
                     
             if game_active :
                 # blit - Block Image Transfer i.e put a regular surface on top of display surface
                 screen.blit(sky_surface,(0,0))
                 screen.blit(ground_surface,(0,300))
-
-                # Score board
-                pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
-                pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
-                screen.blit(score_surface,score_rectangle)
 
                 # snail
                 screen.blit(snail_surface,snail_rectangle)
@@ -97,6 +105,9 @@ def main()-> None:
                 if player_rectangle.bottom > 300 :
                     player_rectangle.bottom = 300
                 screen.blit(player_surface,player_rectangle)
+
+                # display score
+                display_score( screen,start_time )
 
                 # collison
                 if snail_rectangle.colliderect(player_rectangle) :
