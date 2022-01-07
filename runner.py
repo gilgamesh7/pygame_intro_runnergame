@@ -60,6 +60,11 @@ def main()-> None:
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_rectangle = player_surface.get_rect(midbottom=(80,300))
         player_gravity = 0
+
+        # Player stand for game end screen
+        player_stand_surface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
+        player_stand_surface = pygame.transform.rotozoom(player_stand_surface, 45, 2)
+        player_stand_rectangle = player_stand_surface.get_rect(center=(400,200))
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -115,6 +120,7 @@ def main()-> None:
                     game_active = False
             else:
                 screen.fill('Purple')
+                screen.blit(player_stand_surface, player_stand_rectangle)
 
             # Writeupdates to display surface
             pygame.display.update()
