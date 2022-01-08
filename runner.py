@@ -61,10 +61,19 @@ def main()-> None:
         player_rectangle = player_surface.get_rect(midbottom=(80,300))
         player_gravity = 0
 
-        # Player stand for game end screen
+        # Game end screen
+        ## Standing player
         player_stand_surface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
         player_stand_surface = pygame.transform.rotozoom(player_stand_surface, 45, 2)
         player_stand_rectangle = player_stand_surface.get_rect(center=(400,200))
+        ## Caption
+        game_font= pygame.font.SysFont('timesnewroman',  20)
+        game_name_surface = game_font.render('Pixel Runner', False, (64,64,64))
+        game_name_rectangle = game_name_surface.get_rect(center=(400,80))
+        ### Instructions
+        game_instructions_surface = game_font.render('Press space for another game ...', False, (104,0,104))
+        game_instructions_rectangle = game_instructions_surface.get_rect(center=(400,100))
+
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -121,6 +130,8 @@ def main()-> None:
             else:
                 screen.fill('Purple')
                 screen.blit(player_stand_surface, player_stand_rectangle)
+                screen.blit(game_name_surface, game_name_rectangle)
+                screen.blit(game_instructions_surface, game_instructions_rectangle)
 
             # Writeupdates to display surface
             pygame.display.update()
