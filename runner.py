@@ -33,9 +33,11 @@ def display_score(screen: pygame.display, start_time: int) -> int:
 def obstacle_movement(screen, snail_surface, obstacles_list) -> List:
     if obstacles_list:
         for obstacle_rectangle in obstacles_list:
-            obstacle_rectangle.x -= 5   # speed is 5
+            obstacle_rectangle.x -= 4   # speed is 4
 
             screen.blit(snail_surface, obstacle_rectangle)
+
+            obstacles_list = [obstacle for obstacle in obstacles_list if obstacle.x > -100]
 
         return obstacles_list
     else:
@@ -127,9 +129,8 @@ def main() -> None:
                             game_active = True
                             snail_rectangle.left = 800
                             start_time = int(pygame.time.get_ticks()/1000)
-
                     
-            if game_active :
+            if game_active:
                 # blit - Block Image Transfer i.e put a regular surface on top of display surface
                 screen.blit(sky_surface,(0,0))
                 screen.blit(ground_surface,(0,300))
