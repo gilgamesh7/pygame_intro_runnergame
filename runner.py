@@ -5,6 +5,8 @@ from rich.logging import RichHandler
 
 from sys import exit
 
+from random import randint
+
 # Initialise Logger
 logging.basicConfig(level=logging.INFO, format="[{asctime}] - {funcName} - {message}", style='{', handlers=[RichHandler()])
 logger = logging.getLogger("Runner")
@@ -54,10 +56,11 @@ def main()-> None:
         # create ground regular surface
         ground_surface = pygame.image.load('graphics/ground.png').convert()
 
-        # Snail
+        # OBSTACLES
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
         snail_rectangle = snail_surface.get_rect(topleft=(700, 265))
-        snail_speed = 4
+
+        obstacles_rectangle_list = []        
 
         # Player
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
@@ -76,6 +79,10 @@ def main()-> None:
         # Instructions
         game_instructions_surface = game_font.render('Press space for another game ...', False, (104,0,104))
         game_instructions_rectangle = game_instructions_surface.get_rect(center=(400,350))
+
+        # Timer
+        obstacle_timer = pygame.USEREVENT + 1
+        pygame.time.set_timer(obstacle_timer, 900)
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -99,12 +106,16 @@ def main()-> None:
                         if event.key == pygame.K_SPACE:
                             if player_rectangle.bottom == 300:
                                 player_gravity = -20
+
+                    if event.type == obstacle_timer:
+                        obstacles_rectangle_list.append(snail_surface.get_rect(topleft=(randint(900, 1100), 265)))
                 else:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             game_active = True
                             snail_rectangle.left = 800
                             start_time = int(pygame.time.get_ticks()/1000)
+
                     
             if game_active :
                 # blit - Block Image Transfer i.e put a regular surface on top of display surface
@@ -112,8 +123,6 @@ def main()-> None:
                 screen.blit(ground_surface,(0,300))
 
                 # snail
-                screen.blit(snail_surface,snail_rectangle)
-                snail_rectangle.x = snail_rectangle.x - snail_speed if snail_rectangle.right > 0 else 800
 
                 # player
                 player_gravity += 1
@@ -142,13 +151,15 @@ def main()-> None:
             # Writeupdates to display surface
             pygame.display.update()
 
-            # Control speed , set maximum frame rate - while loop must not run more than 60 times per second
+            # Control speed , set maximum frame rate - while loop must not run 
+            # more than 60 times per second
             clock.tick(60)
 
     except Exception as error:
         logger.error(f"[red]{error}[/red]", extra={"markup": True})
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     try:
         main()
 
