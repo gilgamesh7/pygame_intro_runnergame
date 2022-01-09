@@ -1,3 +1,4 @@
+from typing import List
 import pygame
 
 import logging
@@ -29,7 +30,19 @@ def display_score(screen: pygame.display, start_time: int) -> int:
     return current_time
 
 
-def main()-> None:
+def obstacle_movement(screen, snail_surface, obstacles_list) -> List:
+    if obstacles_list:
+        for obstacle_rectangle in obstacles_list:
+            obstacle_rectangle.x -= 5   # speed is 5
+
+            screen.blit(snail_surface, obstacle_rectangle)
+
+        return obstacles_list
+    else:
+        return []
+
+
+def main() -> None:
     try:
         # raise Exception("Testing exception logger")
 
@@ -56,15 +69,14 @@ def main()-> None:
         # create ground regular surface
         ground_surface = pygame.image.load('graphics/ground.png').convert()
 
-        # OBSTACLES
+        # OBSTACLES - surfaces only, rectanglesto be constructed using randint later
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-        snail_rectangle = snail_surface.get_rect(topleft=(700, 265))
-
+        snail_rectangle = snail_surface.get_rect(topleft=(randint(900, 1100), 265))
         obstacles_rectangle_list = []        
 
         # Player
         player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
-        player_rectangle = player_surface.get_rect(midbottom=(80,300))
+        player_rectangle = player_surface.get_rect(midbottom=(80, 300))
         player_gravity = 0
 
         # Game end screen
@@ -82,7 +94,7 @@ def main()-> None:
 
         # Timer
         obstacle_timer = pygame.USEREVENT + 1
-        pygame.time.set_timer(obstacle_timer, 900)
+        pygame.time.set_timer(obstacle_timer, 1500)
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -91,13 +103,13 @@ def main()-> None:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     logger.info(f"[purple]Quitting Runner[/purple]", extra={"markup": True})
-                    pygame.quit() # Opposite of .init()
+                    pygame.quit()  # Opposite of .init()
  
                     # Ensure pygame ends 
                     exit()
 
-                if game_active :
-                    if event.type == pygame.MOUSEBUTTONDOWN :
+                if game_active:
+                    if event.type == pygame.MOUSEBUTTONDOWN:
                         if player_rectangle.collidepoint(event.pos):
                             if player_rectangle.bottom == 300:
                                 player_gravity = -20
@@ -122,7 +134,8 @@ def main()-> None:
                 screen.blit(sky_surface,(0,0))
                 screen.blit(ground_surface,(0,300))
 
-                # snail
+                # obstacles, like the snail
+                obstacles_rectangle_list = obstacle_movement(screen, snail_surface, obstacles_rectangle_list)
 
                 # player
                 player_gravity += 1
