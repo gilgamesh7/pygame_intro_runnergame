@@ -9,19 +9,22 @@ from sys import exit
 logging.basicConfig(level=logging.INFO, format="[{asctime}] - {funcName} - {message}", style='{', handlers=[RichHandler()])
 logger = logging.getLogger("Runner")
 
-def display_score(screen: pygame.display, start_time: int)->None:
+
+def display_score(screen: pygame.display, start_time: int) -> int:
     current_time = int(pygame.time.get_ticks()/1000) - start_time
 
     # Create on screen caption - None defaults to pygame font
-    score_font= pygame.font.Font('fonts/Pixeltype.ttf', 30)
+    score_font = pygame.font.Font('fonts/Pixeltype.ttf', 30)
     # Text, Anti Aliaising to smooth out edges, 
-    score_surface = score_font.render(f'Score : {current_time}', False, (64,64,64))
-    score_rectangle = score_surface.get_rect(center=(400,50))
+    score_surface = score_font.render(f'Score : {current_time}', False, (64, 64, 64))
+    score_rectangle = score_surface.get_rect(center=(400, 50))
 
     # Score board
     pygame.draw.rect(screen,'#c0e8ec',score_rectangle,6)
     pygame.draw.rect(screen,'#c0e8ec',score_rectangle)
     screen.blit(score_surface,score_rectangle)
+
+    return current_time
 
 
 def main()-> None:
@@ -62,18 +65,17 @@ def main()-> None:
         player_gravity = 0
 
         # Game end screen
-        ## Standing player
+        # - Standing player
         player_stand_surface = pygame.image.load('graphics/Player/player_stand.png').convert_alpha()
         player_stand_surface = pygame.transform.rotozoom(player_stand_surface, 45, 2)
         player_stand_rectangle = player_stand_surface.get_rect(center=(400,200))
-        ## Caption
-        game_font= pygame.font.SysFont('timesnewroman',  20)
-        game_name_surface = game_font.render('Pixel Runner', False, (64,64,64))
-        game_name_rectangle = game_name_surface.get_rect(center=(400,80))
-        ### Instructions
+        # - Caption
+        game_font = pygame.font.SysFont('timesnewroman',  20)
+        game_name_surface = game_font.render('Pixel Runner', False, (64, 64, 64))
+        game_name_rectangle = game_name_surface.get_rect(center=(400, 80))
+        # Instructions
         game_instructions_surface = game_font.render('Press space for another game ...', False, (104,0,104))
-        game_instructions_rectangle = game_instructions_surface.get_rect(center=(400,100))
-
+        game_instructions_rectangle = game_instructions_surface.get_rect(center=(400,350))
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -121,7 +123,7 @@ def main()-> None:
                 screen.blit(player_surface,player_rectangle)
 
                 # display score
-                display_score( screen,start_time )
+                score = display_score( screen,start_time )
 
                 # collison
                 if snail_rectangle.colliderect(player_rectangle) :
@@ -132,6 +134,10 @@ def main()-> None:
                 screen.blit(player_stand_surface, player_stand_rectangle)
                 screen.blit(game_name_surface, game_name_rectangle)
                 screen.blit(game_instructions_surface, game_instructions_rectangle)
+                # Final score
+                end_game_score_surface = game_font.render(f'Score : {score}', False, (104, 0, 104))
+                end_game_score_rectangle = end_game_score_surface.get_rect(center=(400,100))
+                screen.blit(end_game_score_surface, end_game_score_rectangle)
 
             # Writeupdates to display surface
             pygame.display.update()
