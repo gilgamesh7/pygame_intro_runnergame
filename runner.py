@@ -30,12 +30,15 @@ def display_score(screen: pygame.display, start_time: int) -> int:
     return current_time
 
 
-def obstacle_movement(screen, snail_surface, obstacles_list) -> List:
+def obstacle_movement(screen: pygame.display, snail_surface: object, fly_surface: object, obstacles_list: list[object]) -> List:
     if obstacles_list:
         for obstacle_rectangle in obstacles_list:
             obstacle_rectangle.x -= 4   # speed is 4
-
-            screen.blit(snail_surface, obstacle_rectangle)
+            
+            if obstacle_rectangle.bottom > 300:
+                screen.blit(snail_surface, obstacle_rectangle)
+            else:
+                screen.blit(fly_surface, obstacle_rectangle)
 
             obstacles_list = [obstacle for obstacle in obstacles_list if obstacle.x > -100]
 
@@ -73,7 +76,8 @@ def main() -> None:
 
         # OBSTACLES - surfaces only, rectanglesto be constructed using randint later
         snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-        snail_rectangle = snail_surface.get_rect(topleft=(randint(900, 1100), 265))
+        fly_surface = pygame.image.load('graphics/Fly/Fly1.png').convert_alpha()
+
         obstacles_rectangle_list = []        
 
         # Player
@@ -122,12 +126,15 @@ def main() -> None:
                                 player_gravity = -20
 
                     if event.type == obstacle_timer:
-                        obstacles_rectangle_list.append(snail_surface.get_rect(topleft=(randint(900, 1100), 265)))
+                        if randint(0,2):
+                            obstacles_rectangle_list.append(snail_surface.get_rect(topleft=(randint(900, 1100), 265)))
+                        else:
+                            obstacles_rectangle_list.append(fly_surface.get_rect(topleft=(randint(900, 1100), 150)))
+
                 else:
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             game_active = True
-                            snail_rectangle.left = 800
                             start_time = int(pygame.time.get_ticks()/1000)
                     
             if game_active:
@@ -136,7 +143,7 @@ def main() -> None:
                 screen.blit(ground_surface,(0,300))
 
                 # obstacles, like the snail
-                obstacles_rectangle_list = obstacle_movement(screen, snail_surface, obstacles_rectangle_list)
+                obstacles_rectangle_list = obstacle_movement(screen, snail_surface, fly_surface, obstacles_rectangle_list)
 
                 # player
                 player_gravity += 1
@@ -149,9 +156,9 @@ def main() -> None:
                 score = display_score( screen,start_time )
 
                 # collison
-                if snail_rectangle.colliderect(player_rectangle) :
-                    logger.info(f"[red]COLLISION - EndingGame[/red]", extra={"markup": True})
-                    game_active = False
+                # if snail_rectangle.colliderect(player_rectangle) :
+                #     logger.info(f"[red]COLLISION - EndingGame[/red]", extra={"markup": True})
+                #     game_active = False
             else:
                 screen.fill('Purple')
                 screen.blit(player_stand_surface, player_stand_rectangle)
