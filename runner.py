@@ -47,6 +47,15 @@ def obstacle_movement(screen: pygame.display, snail_surface: object, fly_surface
         return []
 
 
+def detect_collisions(player: object, obstacles_list: object)->bool:
+    if obstacles_list:
+        for obstacle_rectangle in obstacles_list:
+            if player.colliderect(obstacle_rectangle):
+                return False
+
+    return True
+
+
 def main() -> None:
     try:
         # raise Exception("Testing exception logger")
@@ -156,14 +165,16 @@ def main() -> None:
                 score = display_score( screen,start_time )
 
                 # collison
-                # if snail_rectangle.colliderect(player_rectangle) :
-                #     logger.info(f"[red]COLLISION - EndingGame[/red]", extra={"markup": True})
-                #     game_active = False
+                game_active = detect_collisions(player_rectangle, obstacles_rectangle_list)
             else:
                 screen.fill('Purple')
                 screen.blit(player_stand_surface, player_stand_rectangle)
                 screen.blit(game_name_surface, game_name_rectangle)
                 screen.blit(game_instructions_surface, game_instructions_rectangle)
+
+                # reset obstacles list to ensure game doesnt crash after every space bar
+                obstacles_rectangle_list.clear()
+                
                 # Final score
                 end_game_score_surface = game_font.render(f'Score : {score}', False, (104, 0, 104))
                 end_game_score_rectangle = end_game_score_surface.get_rect(center=(400,100))
