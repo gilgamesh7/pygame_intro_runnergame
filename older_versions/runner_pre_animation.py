@@ -90,14 +90,7 @@ def main() -> None:
         obstacles_rectangle_list = []        
 
         # Player
-        player_walk_1_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
-        player_walk_2_surface = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
-        player_jump_surface = pygame.image.load('graphics/Player/jump.png').convert_alpha()
-
-        player_walk_surfaces_list = [player_walk_1_surface, player_walk_2_surface]
-        player_walk_index = 0
-
-        player_surface = player_walk_surfaces_list[player_walk_index]
+        player_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_rectangle = player_surface.get_rect(midbottom=(80, 300))
         player_gravity = 0
 
@@ -181,7 +174,7 @@ def main() -> None:
 
                 # reset obstacles list to ensure game doesnt crash after every space bar
                 obstacles_rectangle_list.clear()
-
+                
                 # Final score
                 end_game_score_surface = game_font.render(f'Score : {score}', False, (104, 0, 104))
                 end_game_score_rectangle = end_game_score_surface.get_rect(center=(400,100))
