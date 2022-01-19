@@ -12,7 +12,22 @@ from random import randint
 logging.basicConfig(level=logging.INFO, format="[{asctime}] - {funcName} - {message}", style='{', handlers=[RichHandler()])
 logger = logging.getLogger("Runner")
 
+def player_animation(player_rectangle, player_jump_surface, player_walk_surfaces_list, player_walk_index):
 
+    if player_rectangle.bottom < 300 :
+        # play jump animation when player not on floor
+        player_surface = player_jump_surface
+    else:
+        # play walking animatio  when on floor
+        player_walk_index += 0.1
+        player_walk_index += 0.1
+        if player_walk_index >= len(player_walk_surfaces_list) :
+            player_walk_index = 0
+        player_surface = player_walk_surfaces_list[int(player_walk_index)]
+
+    return  player_surface
+
+    
 def display_score(screen: pygame.display, start_time: int) -> int:
     current_time = int(pygame.time.get_ticks()/1000) - start_time
 
@@ -95,8 +110,10 @@ def main() -> None:
         player_jump_surface = pygame.image.load('graphics/Player/jump.png').convert_alpha()
 
         player_walk_surfaces_list = [player_walk_1_surface, player_walk_2_surface]
+        global player_walk_index
         player_walk_index = 0
 
+        global player_surface
         player_surface = player_walk_surfaces_list[player_walk_index]
         player_rectangle = player_surface.get_rect(midbottom=(80, 300))
         player_gravity = 0
@@ -166,6 +183,7 @@ def main() -> None:
                 player_rectangle.y += player_gravity
                 if player_rectangle.bottom > 300 :
                     player_rectangle.bottom = 300
+                player_animation(player_rectangle, player_jump_surface, player_walk_surfaces_list, player_walk_index)
                 screen.blit(player_surface,player_rectangle)
 
                 # display score
