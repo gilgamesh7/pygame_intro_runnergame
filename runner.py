@@ -98,8 +98,21 @@ def main() -> None:
         ground_surface = pygame.image.load('graphics/ground.png').convert()
 
         # OBSTACLES - surfaces only, rectanglesto be constructed using randint later
-        snail_surface = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
-        fly_surface = pygame.image.load('graphics/Fly/Fly1.png').convert_alpha()
+        # Snail
+        snail_surface_1 = pygame.image.load('graphics/snail/snail1.png').convert_alpha()
+        snail_surface_2 = pygame.image.load('graphics/snail/snail2.png').convert_alpha()
+
+        snail_surfaces_list = [snail_surface_1, snail_surface_2]
+        snail_surfaces_index = 0
+        snail_surface = snail_surfaces_list[snail_surfaces_index]
+
+        # Fly
+        fly_surface_1 = pygame.image.load('graphics/Fly/Fly1.png').convert_alpha()
+        fly_surface_2 = pygame.image.load('graphics/Fly/Fly2.png').convert_alpha()
+
+        fly_surfaces_list = [fly_surface_1, fly_surface_2]
+        fly_surfaces_index = 0
+        fly_surface = fly_surfaces_list[fly_surfaces_index]
 
         obstacles_rectangle_list = []        
 
@@ -128,9 +141,17 @@ def main() -> None:
         game_instructions_surface = game_font.render('Press space for another game ...', False, (104,0,104))
         game_instructions_rectangle = game_instructions_surface.get_rect(center=(400,350))
 
-        # Timer
+        # Timer - obstacle generation
         obstacle_timer = pygame.USEREVENT + 1
-        pygame.time.set_timer(obstacle_timer, 1500)
+        pygame.time.set_timer(obstacle_timer, 2000)
+
+        # Timer - snail animator
+        snail_animation_timer = pygame.USEREVENT + 2
+        pygame.time.set_timer(snail_animation_timer, 500)
+        
+        # Timer - fly animator
+        fly_animation_timer = pygame.USEREVENT + 2
+        pygame.time.set_timer(fly_animation_timer, 200)
         
         logger.info(f"[green]Initialised Runner[/green]", extra={"markup": True})
  
@@ -160,6 +181,14 @@ def main() -> None:
                             obstacles_rectangle_list.append(snail_surface.get_rect(topleft=(randint(900, 1100), 265)))
                         else:
                             obstacles_rectangle_list.append(fly_surface.get_rect(topleft=(randint(900, 1100), 150)))
+
+                    if event.type == snail_animation_timer:
+                        snail_surfaces_index = 0 if snail_surfaces_index == 1 else 1
+                        snail_surface = snail_surfaces_list[snail_surfaces_index]
+
+                    if event.type == fly_animation_timer:
+                        fly_surfaces_index = 0 if fly_surfaces_index == 1 else 1
+                        fly_surface = fly_surfaces_list[fly_surfaces_index]
 
                 else:
                     if event.type == pygame.KEYDOWN:
