@@ -125,8 +125,9 @@ def main() -> None:
         obstacles_rectangle_list = []        
 
         # Player
-        player = Player()
-        
+        player = pygame.sprite.GroupSingle()
+        player.add(Player())
+
         player_walk_1_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         player_walk_2_surface = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
         player_jump_surface = pygame.image.load('graphics/Player/jump.png').convert_alpha()
@@ -221,6 +222,7 @@ def main() -> None:
                     player_rectangle.bottom = 300
                 player_walk_index, player_surface = player_animation(player_rectangle, player_jump_surface, player_walk_surfaces_list, player_walk_index)
                 screen.blit(player_surface, player_rectangle)
+                player.draw(screen)
 
                 # display score
                 score = display_score(screen, start_time)
