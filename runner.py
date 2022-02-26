@@ -18,6 +18,14 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
         self.rect = self.image.get_rect(midbottom=(200,300))
         self.gravity = 0
+        player_walk_1_surface = pygame.image.load('graphics/Player/player_walk_1.png').convert_alpha()
+        player_walk_2_surface = pygame.image.load('graphics/Player/player_walk_2.png').convert_alpha()
+        self.player_jump_surface = pygame.image.load('graphics/Player/jump.png').convert_alpha()
+
+        self.player_walk_surfaces_list = [player_walk_1_surface, player_walk_2_surface]
+        self.player_walk_index = 0
+
+        self.image = self.player_walk_surfaces_list[self.player_walk_index]
 
     def player_input(self):
         keys = pygame.key.get_pressed()
@@ -30,9 +38,19 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom >= 300:
             self.rect.bottom = 300
 
+    def animation_state(self):
+        if self.rect.bottom < 300:
+            self.image = self.player_jump_surface
+        else:
+            self.player_walk_index += 0.1
+            if self.player_walk_index >=  len(self.player_walk_surfaces_list) :
+                self.player_walk_index = 0
+            self.image = self.player_walk_surfaces_list[int(self.player_walk_index)]
+
     def update(self):
         self.player_input()
         self.apply_gravity()
+        self.animation_state()
 
 
 
